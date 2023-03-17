@@ -13,7 +13,16 @@ def upload_file(file:UploadFile = File(...,description = 'give heart.csv file'))
     
     return tmp_data.to_json()
 
-
+@app.post('/mean_max_min')
+def get_data(column: schema.Columns_Value):
+    arr = np.array(app.state.df[column.name])
+    if (column.value == "min") :
+        return arr.min()
+    elif (column.value == "max"):
+        return arr.max()
+    elif (column.value == "mean"):
+        return arr.mean()
+    return "None"
 
 @app.get('/getDataLine/{number}')
 def get_data(number:int):
@@ -26,8 +35,10 @@ def get_data(number:int):
 @app.get('/getColumns')
 def get_columnns():
     data = app.state.df
-    return {"data":data.columns}
-
+    res = {"data":data.columns}
+    print(res['data'])
+    return data.columns
+    return "none"
 @app.get('/getDataMM/{col_name}_{value}')
 def get_Max_Min(col_name,value):    
     if (value == 'min'):
@@ -37,14 +48,5 @@ def get_Max_Min(col_name,value):
 
 
 
-@app.post('/mean_max_min')
-def get_data(column: schema.Columns_Value):
-    arr = np.array(app.state.df[column.name])
-    if (column.value == "min") :
-        return arr.min()
-    elif (column.value == "max"):
-        return arr.max()
-    elif (column.value == "mean"):
-        return arr.mean()
-    return "None"
+
 
