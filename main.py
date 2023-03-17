@@ -21,6 +21,14 @@ def upload_columns(name_row:str,file:UploadFile = File(...,description = 'give c
     
     return app.state.df.to_json()
 
+
+@app.post('/addRow')
+def upload_row(file:UploadFile = File(...,description = 'give row.csv file')):
+    tmp_data = pd.read_csv(file.file)
+    app.state.df = app.state.df.append(tmp_data, ignore_index=True)
+    
+    return app.state.df.to_json()
+
 @app.post('/getmean_max_min')
 def get_data(column: schema.Columns_Value):
     arr = np.array(app.state.df[column.name])
