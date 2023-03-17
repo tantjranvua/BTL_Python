@@ -14,7 +14,7 @@ def upload_file(file:UploadFile = File(...,description = 'give heart.csv file'))
     
     return tmp_data.to_json()
 
-@app.post('/mean_max_min')
+@app.post('/getmean_max_min')
 def get_data(column: schema.Columns_Value):
     arr = np.array(app.state.df[column.name])
     if (column.value == "min") :
@@ -43,4 +43,12 @@ def get_Max_Min(col_name:str,value:str):
     else:
         return data[data[col_name] == data[col_name].max()].to_json()
 
+
+@app.get('/benh/{name}')
+def numberof(name:str):
+    data = app.state.df
+    res = int((data[data[name] == 1].count()[name]))
+    # print(type(int(res)))
+    return {"data": res}
+    # return 0
 
