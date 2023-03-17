@@ -52,3 +52,22 @@ def numberof(name:str):
     return {"data": res}
     # return 0
 
+@app.post('/get_number_smoking')
+def get_number_smoking(data:schema.Number_Smoking):
+    df = app.state.df
+    df = df[df["smoking"]==1]
+    arr = np.array(df["age"])
+    A = np.random.normal(arr.mean(),arr.std(),data.people)
+    A = np.round(A)
+    res = int((A==data.age).sum())
+    # print(type((A==data.age).sum()))
+    return {"data": res}
+
+@app.get('/smoking_dead')
+def get_number_dead(data:schema.Smoking_Dead):
+    df = app.state.df
+    df = df[df["smoking"]==1]
+    pro = len(df[df["DEATH_EVENT"]==1])/len(df)
+    A = np.random.binomial(1,pro,data.people)
+    res = int(A.sum())
+    return {"data": res}
