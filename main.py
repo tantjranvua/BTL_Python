@@ -14,6 +14,13 @@ def upload_file(file:UploadFile = File(...,description = 'give heart.csv file'))
     
     return tmp_data.to_json()
 
+@app.post('/addColumns/{name_row}')
+def upload_columns(name_row:str,file:UploadFile = File(...,description = 'give columns.csv file')):
+    tmp_data = pd.read_csv(file.file)
+    app.state.df[name_row] = tmp_data
+    
+    return app.state.df.to_json()
+
 @app.post('/getmean_max_min')
 def get_data(column: schema.Columns_Value):
     arr = np.array(app.state.df[column.name])
@@ -33,7 +40,7 @@ def get_data(number:int):
 
 @app.get('/getColumns')
 def get_columnns():
-    return pd.DataFrame(app.state.df.columns.values).to_json()
+    return {"Data ": pd.DataFrame(app.state.df.columns) }
 
 @app.get('/getDataMM/{col_name}_{value}')
 def get_Max_Min(col_name:str,value:str):    
