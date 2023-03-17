@@ -5,7 +5,8 @@ import schema
 import numpy as np
 
 app = FastAPI()
-data = pd.DataFrame()
+app.state.df = pd.DataFrame()
+
 @app.post('/uploadFile')
 def upload_file(file:UploadFile = File(...,description = 'give heart.csv file')):
     tmp_data = pd.read_csv(file.file)
@@ -27,26 +28,19 @@ def get_data(column: schema.Columns_Value):
 @app.get('/getDataLine/{number}')
 def get_data(number:int):
     data = app.state.df
-    app.state.df = pd.DataFrame(data)
-    print(data)
-    print(data.head(min(int(number),len(data))).to_json())
+    # print(data.head(min(int(number),len(data))).to_json())
     return data.head(min(int(number),len(data))).to_json()
 
 @app.get('/getColumns')
 def get_columnns():
-    data = app.state.df
-    res = {"data":data.columns}
-    print(res['data'])
-    return data.columns
-    return "none"
+    return pd.DataFrame(app.state.df.columns.values).to_json()
+
 @app.get('/getDataMM/{col_name}_{value}')
-def get_Max_Min(col_name,value):    
+def get_Max_Min(col_name:str,value:str):    
+    data = app.state.df
     if (value == 'min'):
-        data[data[col_name] == data[col_name].min()]
+        return data[data[col_name] == data[col_name].min()].to_json()
     else:
-        data[data[col_name] == data[col_name].max()]
-
-
-
+        return data[data[col_name] == data[col_name].max()].to_json()
 
 
