@@ -86,3 +86,18 @@ def get_number_dead(data:schema.Smoking_Dead):
     A = np.random.binomial(1,pro,data.people)
     res = int(A.sum())
     return {"data": res}
+
+@app.get('/randomOut')
+def random_print():
+    pos_ = np.random.randint(len(app.state.df)-1, size=1)
+    return {"Data" : app.state.df.iloc[pos_[0]]}
+
+@app.get('/plot/{name_columns}_{kind}')
+def plot_Data(name_columns:str,kind : str,file:UploadFile = File(...,description = 'give me file')):
+    try :
+        fig = app.state.df[name_columns].plot(kind=kind,  
+        figsize=(20, 16), fontsize=26).get_figure()
+        fig.savefig(name_columns+"_"+kind+'.png')
+        return "Succes"
+    except:
+        return "Error"
