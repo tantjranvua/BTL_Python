@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException, status, File, UploadFile
 from fastapi.responses import FileResponse
 import pandas as pd
+import numpy as np
+
 app = FastAPI()
 
 data = 0
@@ -19,3 +21,13 @@ def get_mean_max_min(columns:str):
     arr.min()
     arr.mean()
     return columns
+
+@app.get('/getDataLine/{number}')
+def get_data(number):
+    return data.head(min(number,len(data)))
+
+@app.get('/getColumns')
+def get_columnns():
+    return data.columns
+
+
