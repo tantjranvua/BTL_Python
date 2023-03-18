@@ -98,3 +98,18 @@ def change_platelets(dv:str):
         return "None"
     df = pd.DataFrame(arr) 
     return {"data":df}
+
+@app.get('/randomOut')
+def random_print():
+    pos_ = np.random.randint(len(app.state.df)-1, size=1)
+    return {"Data" : app.state.df.iloc[pos_[0]]}
+
+@app.get('/plot/{name}_{kind}')
+def plot_Data(name:str,kind : str):
+    try :
+        fig = app.state.df[name].plot(kind=kind,  
+        figsize=(20, 16), fontsize=26).get_figure()
+        fig.savefig(name+"_"+kind+'.png')
+        return FileResponse(name+"_"+kind+'.png',filename=name+"_"+kind+'.png')
+    except:
+        return "Error"
