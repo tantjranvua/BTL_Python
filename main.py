@@ -78,7 +78,7 @@ def get_number_smoking(data:schema.Number_Smoking):
     # print(type((A==data.age).sum()))
     return {"data": res}
 
-@app.get('/smoking_dead')
+@app.post('/smoking_dead')
 def get_number_dead(data:schema.Smoking_Dead):
     df = app.state.df
     df = df[df["smoking"]==1]
@@ -86,3 +86,15 @@ def get_number_dead(data:schema.Smoking_Dead):
     A = np.random.binomial(1,pro,data.people)
     res = int(A.sum())
     return {"data": res}
+
+@app.get('/change_platelets_to_{dv}')
+def change_platelets(dv:str):
+    arr = np.array(app.state.df['platelets'])
+    if(dv == "gL"):
+        arr =arr/1000
+    elif(dv=="cellL"):
+        arr = arr*1000
+    else:
+        return "None"
+    df = pd.DataFrame(arr) 
+    return {"data":df}
