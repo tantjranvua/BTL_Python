@@ -9,7 +9,7 @@ app.state.df = pd.DataFrame()
 
 @app.post('/uploadFile', description ="Truyền vào dữ liệu dạng json \n Endpoint sẽ upload file lên hệ thống và sử dụng thực hiện các endpoint khác")
 def upload_file(file:UploadFile = File(...,description = 'give heart.csv file')):
-    print(app.state.df.shape)
+    # print(app.state.df.shape)
     try:
         tmp_data = pd.read_csv(file.file)
         app.state.df = tmp_data
@@ -23,12 +23,12 @@ def upload_columns(name_row:str,file:UploadFile = File(...,description = 'give c
         raise HTTPException(status_code = 406,detail="data have not uploaded")
     try:
         tmp_data = pd.read_csv(file.file)
-        if(tmp_data.shape[1]>1):
-            raise HTTPException(status_code = 406,detail="data have more 1 column")
-            app.state.df[name_row] = tmp_data
-            return app.state.df.to_json()
     except:
         raise HTTPException(status_code = 404,detail="cannot read file")
+    if(tmp_data.shape[1]>1):
+        raise HTTPException(status_code = 406,detail="data have more 1 column")
+    app.state.df[name_row] = tmp_data
+    return app.state.df.to_json()
 
 @app.post('/addRow', description ="Truyền vào dữ liệu dạng json gồm dữ liệu dòng mới thêm mới \n Endpoint sẽ trả về file dữ liệu dạng json mới \n")
 def upload_row(file:UploadFile = File(...,description = 'give row.csv file')):
