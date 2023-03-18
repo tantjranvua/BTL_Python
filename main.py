@@ -17,7 +17,7 @@ def upload_file(file:UploadFile = File(...,description = 'give heart.csv file'))
     except:
         raise HTTPException(status_code = 404,detail="cannot read file")
 
-@app.post('/addColumns/{name_row}')
+@app.post('/addColumns/{name_row}', description ="Truyền vào dữ liệu dạng json gồm cột mới và dữ liệu cột thêm vào \n Endpoint sẽ trả về file dữ liệu dạng json mới \n")
 def upload_columns(name_row:str,file:UploadFile = File(...,description = 'give columns.csv file')): 
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
@@ -30,7 +30,7 @@ def upload_columns(name_row:str,file:UploadFile = File(...,description = 'give c
     except:
         raise HTTPException(status_code = 404,detail="cannot read file")
 
-@app.post('/addRow')
+@app.post('/addRow', description ="Truyền vào dữ liệu dạng json gồm dữ liệu dòng mới thêm mới \n Endpoint sẽ trả về file dữ liệu dạng json mới \n")
 def upload_row(file:UploadFile = File(...,description = 'give row.csv file')):
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
@@ -42,7 +42,7 @@ def upload_row(file:UploadFile = File(...,description = 'give row.csv file')):
         return app.state.df.to_json()
     except:
         raise HTTPException(status_code = 404,detail="cannot read file")
-@app.get('/getDataLine/{number}')
+@app.get('/getDataLine/{number}',  description ="Truyền vào dữ liệu số dạng int \n Endpoint sẽ trả về giá trị của những cột")
 def get_data(number:int):
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
@@ -50,13 +50,13 @@ def get_data(number:int):
     # print(data.head(min(int(number),len(data))).to_json())
     return data.head(min(int(number),len(data))).to_json()
 
-@app.get('/getColumns')
+@app.get('/getColumns', description ="Endpoint sẽ trả về có những cột nào trong dữ liệu")
 def get_columnns():
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
     return {"Data ": pd.DataFrame(app.state.df.columns) }
 
-@app.get('/getDataMM/{col_name}_{value}')
+@app.get('/getDataMM/{col_name}_{value}', description ="Truyền vào dữ liệu column. column.value dạng string \n Endpoint sẽ trả về giá trị trung bình, lớn nhất, nhỏ nhất của cột")
 def get_Max_Min(col_name:str,value:str):  
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")  
@@ -98,7 +98,7 @@ def get_data(column: schema.Columns_Value):
     else:
         raise HTTPException(status_code = 406,detail="value is not mean, max or min") 
 
-@app.post('/smoking_dead')
+@app.post('/smoking_dead', description ="Truyền dữ liệu số người hút thuốc \n Endpoint sẽ trả về số người tử vong vì hút thuốc")
 def get_number_dead(data:schema.Smoking_Dead):
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
@@ -111,7 +111,7 @@ def get_number_dead(data:schema.Smoking_Dead):
     res = int(A.sum())
     return {"data": res}
 
-@app.post('/get_number_smoking')
+@app.post('/get_number_smoking', description="Truyền dữ liệu về số người và tuổi \n Endpoint sẽ trả về dữ liệu số người hút thuốc trong độ tuổi theo phân phối chuẩn")
 def get_number_smoking(data:schema.Number_Smoking):
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
@@ -126,7 +126,7 @@ def get_number_smoking(data:schema.Number_Smoking):
     # print(type((A==data.age).sum()))
     return {"data": res}
 
-@app.get('/benh/{name}')
+@app.get('/benh/{name}', description="Truyền dữ liệu tên các bệnh \n Endpoint sẽ trả về số lượng người mắc bệnh trong dữ liệu hiện tại")
 def numberof(name:str):
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
@@ -137,7 +137,7 @@ def numberof(name:str):
     res = int(arr.sum())
     return {"data": res}
 
-@app.get('/change_platelets_to_{dv}')
+@app.get('/change_platelets_to_{dv}', description="Truyền dữ liệu đơn vị của cột platelets \n Endpoint sẽ trả về cột theo đơn vị nào")
 def change_platelets(dv:str):
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
@@ -151,7 +151,7 @@ def change_platelets(dv:str):
     df = pd.DataFrame(arr) 
     return {"data":df}
 
-@app.get('/randomOut')
+@app.get('/randomOut', description="Endpoint sẽ trả về những thông tin của dòng dữ liệu ngẫu nhiên")
 def random_print():
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
