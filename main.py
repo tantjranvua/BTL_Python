@@ -126,7 +126,7 @@ def get_number_smoking(data:schema.Number_Smoking):
     # print(type((A==data.age).sum()))
     return {"data": res}
 
-@app.get('/benh/{name}', description="Truyền dữ liệu tên các bệnh \n Endpoint sẽ trả về số lượng người mắc bệnh trong dữ liệu hiện tại")
+@app.get('/benh/{name}', description="Truyền dữ liệu tên bệnh( anaemia hoặc diabetes) \n Endpoint sẽ trả về số lượng người mắc bệnh trong dữ liệu hiện tại")
 def numberof(name:str):
     if(app.state.df.shape[0]==0&app.state.df.shape[1]==0):
         raise HTTPException(status_code = 406,detail="data have not uploaded")
