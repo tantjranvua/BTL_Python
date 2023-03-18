@@ -7,7 +7,7 @@ import numpy as np
 app = FastAPI()
 app.state.df = pd.DataFrame()
 
-@app.post('/uploadFile')
+@app.post('/uploadFile', description ="Truyền vào dữ liệu dạng json \n Endpoint sẽ upload file lên hệ thống và sử dụng thực hiện các endpoint khác")
 def upload_file(file:UploadFile = File(...,description = 'give heart.csv file')):
     print(app.state.df.shape)
     try:
